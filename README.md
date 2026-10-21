@@ -51,6 +51,6 @@
 Ikuti panduan berikut untuk menjalankan proyek ini secara lokal di komputer kamu:
 
 1. **Kloning Repositori**
-   ```bash
-   git clone [https://github.com/username-kamu/studyspot.git](https://github.com/username-kamu/studyspot.git)
-   cd studyspot
+    ```bash
+   git clone [https://github.com/username-kamu/studySpot.git](https://github.com/username-kamu/studySpot.git)
+   cd studySpot
