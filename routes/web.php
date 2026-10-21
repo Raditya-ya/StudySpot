@@ -2,9 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ProfileController; // Tambahan untuk memanggil controller profil
+use App\Http\Controllers\ProfileController;
 use App\Models\TempatBelajar;
 use Illuminate\Http\Request;
+use App\Http\Controllers\AdminPlaceController;
+use App\Http\Controllers\BookmarkController;
 
 // Halaman utama diarahkan ke form login
 Route::get('/', function () {
@@ -52,15 +54,29 @@ Route::middleware('auth')->group(function () {
         return view('dashboard', compact('places', 'category', 'search'));
     })->name('dashboard');
 
-    // Halaman Detail Tempat Belajar (TAMBAHAN RUTE DETAIL)
+    // Rute Bookmark Tempat
+    Route::post('/places/{id}/bookmark', [BookmarkController::class, 'toggle'])->name('places.bookmark');
+    Route::get('/bookmarks', [BookmarkController::class, 'index'])->name('bookmarks.index');
+
+    // Halaman Detail Tempat Belajar (NAMA RUTE DISESUAIKAN MENJADI places.show)
     Route::get('/tempat/{id}', function ($id) {
         $place = TempatBelajar::findOrFail($id);
         return view('detail', compact('place'));
-    })->name('tempat.detail');
+    })->name('places.show');
 
     // Halaman Profil & Pengaturan
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+
+    // Kelompok Rute Panel Admin
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/places', [AdminPlaceController::class, 'index'])->name('places.index');
+        Route::get('/places/create', [AdminPlaceController::class, 'create'])->name('places.create');
+        Route::post('/places', [AdminPlaceController::class, 'store'])->name('places.store');
+        Route::get('/places/{id}/edit', [AdminPlaceController::class, 'edit'])->name('places.edit');
+        Route::put('/places/{id}', [AdminPlaceController::class, 'update'])->name('places.update');
+        Route::delete('/places/{id}', [AdminPlaceController::class, 'destroy'])->name('places.destroy');
+    });
     
 });

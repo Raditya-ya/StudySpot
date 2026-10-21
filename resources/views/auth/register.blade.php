@@ -208,6 +208,14 @@
                 </div>
             </div>
 
+        <!-- Pilihan Role (Letakkan di atas tombol daftar) -->
+        <div style="margin-bottom: 16px;">
+            <label for="role" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px;">Mendaftar sebagai:</label>
+            <select name="role" id="role" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #e5e7eb; font-size: 14px;">
+                <option value="user">Pengguna Biasa (Mahasiswa)</option>
+                <option value="admin">Admin StudySpot</option>
+            </select>
+        </div>
             <button type="submit" class="btn-submit">Daftar Akun</button>
         </form>
 

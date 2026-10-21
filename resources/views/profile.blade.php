@@ -20,12 +20,12 @@
         body { background-color: var(--bg-body); color: var(--text-main); display: flex; min-height: 100vh; }
 
         /* Sidebar */
-        .sidebar { width: 250px; background-color: var(--bg-card); padding: 30px 20px; border-right: 1px solid var(--border-light); }
+        .sidebar { width: 250px; background-color: var(--bg-card); padding: 30px 20px; border-right: 1px solid var(--border-light); flex-shrink: 0; }
         .logo { font-size: 20px; font-weight: 700; color: var(--primary); margin-bottom: 40px; display: block; text-decoration: none; }
         .menu-list { display: flex; flex-direction: column; gap: 8px; }
-        .menu-item { padding: 12px 16px; text-decoration: none; color: var(--text-muted); font-weight: 500; font-size: 14px; border-radius: 8px; transition: 0.2s; }
+        .menu-item { padding: 12px 16px; text-decoration: none; color: var(--text-muted); font-weight: 500; font-size: 14px; border-radius: 8px; transition: 0.2s; display: block; }
         .menu-item:hover { background-color: var(--bg-body); color: var(--primary); }
-        .menu-item.active { background-color: var(--primary); color: white; }
+        .menu-item.active { background-color: var(--primary); color: white; font-weight: 600; }
 
         /* Main Content */
         .main-content { flex: 1; padding: 40px 50px; overflow-y: auto; }
@@ -42,6 +42,7 @@
         .user-details h2 { font-size: 18px; margin-bottom: 4px; }
         .user-details p { color: var(--text-muted); font-size: 13px; margin-bottom: 8px; }
         .badge { background-color: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; }
+        .badge-admin { background-color: #e0e7ff; color: #3730a3; }
 
         .card-title { font-size: 16px; font-weight: 700; margin-bottom: 20px; }
         .form-row { display: flex; gap: 20px; margin-bottom: 16px; }
@@ -66,11 +67,20 @@
         <a href="{{ route('dashboard') }}" class="logo">StudySpot</a>
         <nav class="menu-list">
             <a href="{{ route('dashboard') }}" class="menu-item">Dashboard</a>
-            <a href="#" class="menu-item">Data Tempat</a>
-            <a href="#" class="menu-item">Fasilitas</a>
-            <a href="#" class="menu-item">Ketersediaan Kursi</a>
+            
+            @if(auth()->user()->role === 'admin')
+                <a href="{{ route('admin.places.index') }}" class="menu-item">Data Tempat</a>
+                <a href="#" class="menu-item">Fasilitas</a>
+            @endif
+
+            <a href="{{ route('bookmarks.index') }}" class="menu-item">Tempat Tersimpan</a>
             <a href="#" class="menu-item">Laporan</a>
             <a href="{{ route('profile.edit') }}" class="menu-item active">Pengaturan / Profil</a>
+            
+            <form action="{{ route('logout') }}" method="POST" style="margin-top: 20px;">
+                @csrf
+                <button type="submit" class="menu-item" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 12px 16px;">Logout</button>
+            </form>
         </nav>
     </aside>
 
@@ -96,7 +106,9 @@
                         <div class="user-details">
                             <h2>{{ Auth::user()->name }}</h2>
                             <p>{{ Auth::user()->email }}</p>
-                            <span class="badge">User</span>
+                            <span class="badge {{ auth()->user()->role === 'admin' ? 'badge-admin' : '' }}">
+                                {{ ucfirst(auth()->user()->role) }}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -154,7 +166,7 @@
                     </form>
                 </div>
             </div>
-            
+
         </div>
     </main>
 

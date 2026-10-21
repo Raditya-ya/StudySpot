@@ -117,7 +117,7 @@
         .btn-cta:hover { background-color: var(--primary-hover); }
 
         .btn-actions { display: flex; gap: 12px; margin: 16px 0 20px; }
-        .btn-action { flex: 1; padding: 10px; background-color: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; color: var(--text-main); }
+        .btn-action { flex: 1; padding: 10px; background-color: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; color: var(--text-main); transition: 0.2s; }
         .btn-action:hover { background-color: var(--bg-body); }
 
         .info-list { display: flex; flex-direction: column; gap: 12px; font-size: 12px; margin-bottom: 20px; }
@@ -145,9 +145,9 @@
                 <a href="#">Filter</a>
             </div>
         </div>
-        <div class="user-profile" style="width: 36px; height: 36px; border-radius: 50%; background: var(--border-light); display: flex; justify-content: center; align-items: center;">
+        <a href="{{ route('profile.edit') }}" class="user-profile" style="width: 36px; height: 36px; border-radius: 50%; background: var(--border-light); display: flex; justify-content: center; align-items: center; text-decoration: none; color: var(--text-main);">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        </div>
+        </a>
     </nav>
 
     <!-- Main Container -->
@@ -199,7 +199,7 @@
                 </div>
             </div>
         </div>
-
+        
         <!-- Detail Grid 3 Kolom -->
         <div class="detail-grid">
             
@@ -335,9 +335,31 @@
                     📍 Buka petunjuk arah
                 </a>
 
+                <!-- Fitur Simpan & Bagikan Dinamis (Bebas Garis Merah VS Code) -->
                 <div class="btn-actions">
-                    <button class="btn-action">🔖 Simpan</button>
-                    <button class="btn-action">↗️ Bagikan</button>
+                    @php
+                        $isBookmarked = auth()->check() && auth()->user()->bookmarkedPlaces->contains('id', $place->id);
+                    @endphp
+
+                    <form action="{{ route('places.bookmark', $place->id) }}" method="POST" style="flex: 1; margin: 0;">
+                        @csrf
+                        @if($isBookmarked)
+                            <button type="submit" class="btn-action" style="width: 100%; color: #4f46e5;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="#4f46e5" stroke="#4f46e5" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                                <strong>Tersimpan</strong>
+                            </button>
+                        @else
+                            <button type="submit" class="btn-action" style="width: 100%;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                                Simpan
+                            </button>
+                        @endif
+                    </form>
+
+                    <button type="button" class="btn-action" onclick="navigator.clipboard.writeText(window.location.href); alert('Tautan tempat berhasil disalin!');">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                        Bagikan
+                    </button>
                 </div>
 
                 <div class="info-list">

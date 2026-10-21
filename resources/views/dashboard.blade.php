@@ -358,7 +358,7 @@
         <!-- Grid Tempat Belajar -->
 <div class="places-grid">
             @forelse ($places as $place)
-                <a href="{{ route('tempat.detail', $place->id) }}" style="text-decoration: none; color: inherit; display: block;">
+                <a href="{{ route('places.show', $place->id) }}" style="text-decoration: none; color: inherit; display: block;">
                     <div class="card">
                         <div class="card-img-placeholder">
                             @if($place->image_url)

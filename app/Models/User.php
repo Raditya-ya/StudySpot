@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
+        'role',
     ];
 
     /**
@@ -46,5 +47,13 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Relasi Bookmark: Tempat belajar yang disimpan oleh user
+     */
+    public function bookmarkedPlaces()
+    {
+        return $this->belongsToMany(TempatBelajar::class, 'bookmarks');
     }
 }

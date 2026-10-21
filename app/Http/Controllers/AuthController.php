@@ -35,18 +35,20 @@ class AuthController extends Controller
     // Fungsi untuk memproses Pendaftaran (Register)
     public function register(Request $request)
     {
-        // 1. Validasi inputan form pendaftaran
+        // 1. Validasi inputan form pendaftaran (DITAMBAH VALIDASI ROLE)
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'role' => ['required', 'in:user,admin'], // <--- Mencegah input selain 'user' atau 'admin'
         ]);
 
-        // 2. Simpan user baru ke database
+        // 2. Simpan user baru ke database (DITAMBAH SIMPAN ROLE)
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->role, // <--- Mengambil pilihan dropdown dari form
         ]);
 
         // 3. Langsung login-kan user tersebut setelah daftar
