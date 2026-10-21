@@ -1,59 +1,56 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <h1 align="center">🎓 StudySpot</h1>
+  <p align="center">
+    <strong>Platform Pencarian & Review Tempat Belajar Kondusif untuk Mahasiswa</strong>
+  </p>
 </p>
 
-## About Laravel
+<p align="center">
+  <img src="https://img.shields.io/badge/Laravel-12.70.0-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel">
+  <img src="https://img.shields.io/badge/PHP-8.2.12-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP">
+  <img src="https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white" alt="MariaDB">
+  <img src="https://img.shields.io/badge/Status-Progress%201%20Completed-success?style=for-the-badge" alt="Status">
+</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📌 Tentang StudySpot
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**StudySpot** adalah aplikasi berbasis web yang dirancang untuk membantu mahasiswa menemukan, memfilter, dan meninjau lokasi belajar terbaik di sekitar kampus. Sistem ini menyediakan informasi real-time mengenai ketersediaan kursi, kecepatan Wi-Fi, tingkat kebisingan, serta catatan dari mahasiswa lain.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## ✨ Fitur Utama (Progress 1)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 👤 Pengguna & Mahasiswa
+- **Autentikasi Multi-Role:** Login dan Registrasi terpisah untuk peran *User (Mahasiswa)* dan *Admin*.
+- **Eksplorasi & Filter Tempat:** Pencarian tempat belajar berdasarkan nama, lokasi, dan kategori.
+- **Detail Tempat Belajar:** Menampilkan informasi fasilitas, jam operasional, kisaran harga, dan petunjuk arah.
+- **🔖 Simpan Tempat Favorit (Bookmark):** Pengguna dapat menyimpan/menghapus tempat belajar favorit secara *toggle* dan melihat daftar simpanan di halaman khusus.
 
-## Laravel Sponsors
+### 🛡️ Panel Administrator
+- **Dashboard Manajemen Tempat:** Mengelola data tempat belajar (*Create, Read, Update, Delete*).
+- **Form Dynamic Data:** Pengaturan detail fasilitas, kapasitas kursi, dan tingkat kebisingan.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 🛠️ Teknologi & Tools
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+| Komponen | Teknologi |
+| :--- | :--- |
+| **Framework Backend** | Laravel 12.70.0 |
+| **Bahasa Pemrograman** | PHP 8.2.12 |
+| **Database** | MariaDB / MySQL |
+| **Frontend UI** | Blade Template Engine, CSS Custom, Google Fonts (Inter) |
+| **Version Control** | Git & GitHub |
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🚀 Langkah Instalasi & Menjalankan Proyek
 
-## Code of Conduct
+Ikuti panduan berikut untuk menjalankan proyek ini secara lokal di komputer kamu:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. **Kloning Repositori**
+   ```bash
+   git clone [https://github.com/username-kamu/studyspot.git](https://github.com/username-kamu/studyspot.git)
+   cd studyspot
