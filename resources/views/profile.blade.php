@@ -1,7 +1,5 @@
 @if(auth()->user()->role === 'admin')
-    <!-- ========================================== -->
-    <!-- TAMPILAN PROFIL KHUSUS ADMIN (DENGAN SIDEBAR) -->
-    <!-- ========================================== -->
+    <!-- TAMPILAN PROFIL KHUSUS ADMIN -->
     <!DOCTYPE html>
     <html lang="id">
     <head>
@@ -150,9 +148,7 @@
     </html>
 
 @else
-    <!-- ========================================== -->
-    <!-- TAMPILAN PROFIL KHUSUS USER (FULL-WIDTH)   -->
-    <!-- ========================================== -->
+    <!-- TAMPILAN PROFIL KHUSUS USER -->
     <!DOCTYPE html>
     <html lang="id">
     <head>
