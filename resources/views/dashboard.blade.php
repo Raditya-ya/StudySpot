@@ -290,9 +290,8 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-left">
-            <a href="#" class="logo">
-                <div class="logo-icon">🎓</div>
-                StudySpot
+           <a href="{{ route('dashboard') }}" class="logo" style="display: flex; align-items: center; text-decoration: none;">
+                <img src="https://i.pinimg.com/736x/3e/b8/b0/3eb8b071563a9ad95f3357976ec32b46.jpg" alt="StudySpot Logo" style="height: 45px; border-radius: 8px; object-fit: cover;">
             </a>
             <div class="nav-links">
                 <a href="#" class="active">Beranda</a>
