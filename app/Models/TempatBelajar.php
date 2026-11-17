@@ -16,6 +16,8 @@ class TempatBelajar extends Model
         'address',
         'image_url',
         'status_text',
+        'opening_time',
+        'closing_time',
         'available_seats',
         'total_seats',
         'noise_level',
@@ -34,4 +36,9 @@ class TempatBelajar extends Model
         'tags' => 'array',
         'facilities' => 'array',
     ];
+
+    public function studentNotes()
+    {
+        return $this->hasMany(StudentNote::class, 'tempat_belajar_id')->latest();
+    }
 }

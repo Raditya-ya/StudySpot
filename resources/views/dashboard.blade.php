@@ -8,7 +8,7 @@
     <style>
         :root {
             /* HSL Color Palette */
-            --primary: hsl(245, 75%, 60%); /* Warna ungu/biru utama */
+            --primary: hsl(245, 75%, 60%);
             --primary-hover: hsl(245, 75%, 50%);
             --bg-body: hsl(0, 0%, 98%);
             --bg-card: hsl(0, 0%, 100%);
@@ -23,6 +23,8 @@
             --tag-blue-text: hsl(220, 70%, 45%);
             --tag-yellow-bg: hsl(40, 80%, 90%);
             --tag-yellow-text: hsl(40, 80%, 35%);
+            --tag-red-bg: hsl(0, 80%, 94%);
+            --tag-red-text: hsl(0, 70%, 45%);
         }
 
         * {
@@ -57,25 +59,9 @@
         }
 
         .logo {
-            font-size: 20px;
-            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 8px;
-            color: var(--text-main);
             text-decoration: none;
-        }
-
-        .logo-icon {
-            background-color: var(--primary);
-            color: white;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 16px;
         }
 
         .nav-links {
@@ -94,18 +80,6 @@
         .nav-links a.active {
             color: var(--primary);
             border-bottom: 2px solid var(--primary);
-        }
-
-        .user-profile {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--border-light);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--text-muted);
-            cursor: pointer;
         }
 
         /* --- Main Content --- */
@@ -188,6 +162,8 @@
             color: var(--text-muted);
             cursor: pointer;
             transition: 0.2s;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .filter-pill:hover {
@@ -214,6 +190,9 @@
             border: 1px solid var(--border-light);
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .card:hover {
@@ -222,9 +201,8 @@
         }
 
         .card-img-placeholder {
-            height: 160px;
-            /* Gradien ungu-biru mirip desain Figma */
-            background: linear-gradient(135deg, hsl(245, 75%, 65%), hsl(220, 80%, 70%)); 
+            height: 170px;
+            background: linear-gradient(135deg, hsl(245, 75%, 65%), hsl(220, 80%, 70%));
             position: relative;
         }
 
@@ -239,8 +217,36 @@
             transform: translate(-50%, -50%);
         }
 
+        .badge-category {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background-color: rgba(255, 255, 255, 0.92);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            backdrop-filter: blur(4px);
+        }
+
+        .badge-hours {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background-color: rgba(17, 24, 39, 0.78);
+            color: #ffffff;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
         .card-content {
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
 
         .card-title {
@@ -252,7 +258,7 @@
         .card-location {
             font-size: 12px;
             color: var(--text-muted);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
             gap: 4px;
@@ -262,6 +268,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
+            margin-bottom: 14px;
         }
 
         .tag {
@@ -274,6 +281,25 @@
         .tag-green { background-color: var(--tag-green-bg); color: var(--tag-green-text); }
         .tag-blue { background-color: var(--tag-blue-bg); color: var(--tag-blue-text); }
         .tag-yellow { background-color: var(--tag-yellow-bg); color: var(--tag-yellow-text); }
+        .tag-red { background-color: var(--tag-red-bg); color: var(--tag-red-text); }
+
+        .facilities-preview {
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border-light);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .facility-chip {
+            font-size: 11px;
+            color: var(--text-muted);
+            background-color: #f3f4f6;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
 
         /* --- Footer --- */
         footer {
@@ -290,19 +316,25 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-left">
-           <a href="{{ route('dashboard') }}" class="logo" style="display: flex; align-items: center; text-decoration: none;">
+            <a href="{{ route('dashboard') }}" class="logo">
                 <img src="https://i.pinimg.com/736x/3e/b8/b0/3eb8b071563a9ad95f3357976ec32b46.jpg" alt="StudySpot Logo" style="height: 45px; border-radius: 8px; object-fit: cover;">
             </a>
             <div class="nav-links">
-                <a href="#" class="active">Beranda</a>
+                <a href="{{ route('dashboard') }}" class="active">Beranda</a>
                 <a href="#">Rekomendasi</a>
-                <a href="#">Filter</a>
+                <a href="{{ route('bookmarks.index') }}">Tersimpan</a>
             </div>
         </div>
-            <div class="nav-right" style="display: flex; align-items: center; gap: 15px;">
+        <div class="nav-right" style="display: flex; align-items: center; gap: 12px;">
             <span style="font-size: 14px; font-weight: 600; color: var(--text-main);">
                 Halo, {{ Auth::user()->name }}
             </span>
+
+            @if(Auth::user()->role === 'admin')
+                <a href="{{ route('admin.places.index') }}" style="text-decoration: none; background-color: var(--primary); padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; color: white;">
+                    Panel Admin
+                </a>
+            @endif
             
             <!-- Tombol menuju halaman Edit Profil -->
             <a href="{{ route('profile.edit') }}" style="text-decoration: none; background: none; border: 1px solid var(--primary); padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; color: var(--primary); transition: 0.2s;" onmouseover="this.style.backgroundColor='var(--primary)'; this.style.color='white';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--primary)';">
@@ -318,44 +350,42 @@
             </form>
         </div>      
     </nav>
+
     <!-- Main Content -->
     <main class="container">
-        
+        <!-- Header & Pencarian Dinamis -->
+        <div class="header-section">
+            <h1>Cari tempat belajar</h1>
+            <p>Temukan tempat yang pas untuk belajar hari ini</p>
+            
+            <!-- Form Pencarian -->
+            <form action="{{ route('dashboard') }}" method="GET" class="search-container">
+                @if(request('category'))
+                    <input type="hidden" name="category" value="{{ request('category') }}">
+                @endif
+                <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" name="search" class="search-input" value="{{ request('search') }}" placeholder="Cari nama tempat atau lokasi...">
+                <button type="submit" class="btn-search">Cari</button>
+            </form>
 
-    <!-- Header & Pencarian Dinamis -->
-    <div class="header-section">
-        <h1>Cari tempat belajar</h1>
-        <p>Temukan tempat yang pas untuk belajar hari ini</p>
-        
-        <!-- Form Pencarian -->
-        <form action="{{ route('dashboard') }}" method="GET" class="search-container">
-            @if(request('category'))
-                <input type="hidden" name="category" value="{{ request('category') }}">
-            @endif
-            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" name="search" class="search-input" value="{{ request('search') }}" placeholder="Cari nama tempat atau lokasi...">
-            <button type="submit" class="btn-search">Cari</button>
-        </form>
+            <!-- Tombol Filter Kategori -->
+            <div class="filters">
+                @php
+                    $currentCategory = request('category', 'Semua');
+                    $categories = ['Semua', 'Perpustakaan', 'Kafe', 'Co-working', 'Buka sekarang'];
+                @endphp
 
-        <!-- Tombol Filter Kategori -->
-        <div class="filters">
-            @php
-                $currentCategory = request('category', 'Semua');
-                $categories = ['Semua', 'Perpustakaan', 'Kafe', 'Co-working', 'Buka sekarang'];
-            @endphp
-
-            @foreach($categories as $cat)
-                <a href="{{ route('dashboard', ['category' => $cat, 'search' => request('search')]) }}" 
-                class="filter-pill {{ $currentCategory == $cat ? 'active' : '' }}" 
-                style="text-decoration: none; display: inline-block;">
-                    {{ $cat }}
-                </a>
-            @endforeach
+                @foreach($categories as $cat)
+                    <a href="{{ route('dashboard', ['category' => $cat, 'search' => request('search')]) }}" 
+                       class="filter-pill {{ $currentCategory == $cat ? 'active' : '' }}">
+                        {{ $cat }}
+                    </a>
+                @endforeach
+            </div>
         </div>
-    </div>
 
         <!-- Grid Tempat Belajar -->
-<div class="places-grid">
+        <div class="places-grid">
             @forelse ($places as $place)
                 <a href="{{ route('places.show', $place->id) }}" style="text-decoration: none; color: inherit; display: block;">
                     <div class="card">
@@ -365,12 +395,48 @@
                             @else
                                 <div class="card-img-inner-circle"></div>
                             @endif
+
+                            <!-- Badge Kategori -->
+                            @if($place->category)
+                                <span class="badge-category">{{ $place->category }}</span>
+                            @endif
+
+                            <!-- Badge Jam Operasional Dinamis -->
+                            @if($place->opening_time && $place->closing_time)
+                                <span class="badge-hours">🕒 {{ $place->opening_time }} - {{ $place->closing_time }}</span>
+                            @elseif($place->status_text)
+                                <span class="badge-hours">🕒 {{ $place->status_text }}</span>
+                            @endif
                         </div>
+
                         <div class="card-content">
                             <h3 class="card-title">{{ $place->name }}</h3>
                             <div class="card-location">📍 {{ $place->location }} • {{ $place->distance }}</div>
+
+                            <!-- Indikator Kondisi Operasional (Kursi, Wi-Fi, Kebisingan) -->
                             <div class="tags-container">
-                                @if(!empty($place->tags))
+                                @if($place->available_seats !== null || $place->wifi_speed || $place->noise_level)
+                                    @if($place->available_seats !== null)
+                                        <span class="tag tag-green">🪑 {{ $place->available_seats }} Kursi</span>
+                                    @endif
+
+                                    @if($place->wifi_speed)
+                                        <span class="tag tag-blue">📶 Wi-Fi {{ $place->wifi_speed }}</span>
+                                    @endif
+
+                                    @if($place->noise_level)
+                                        @php
+                                            $noiseClass = 'tag-green';
+                                            if ($place->noise_level === 'Sedang') {
+                                                $noiseClass = 'tag-yellow';
+                                            } elseif ($place->noise_level === 'Tinggi') {
+                                                $noiseClass = 'tag-red';
+                                            }
+                                        @endphp
+                                        <span class="tag {{ $noiseClass }}">🔊 Kebisingan {{ $place->noise_level }}</span>
+                                    @endif
+                                @elseif(!empty($place->tags))
+                                    <!-- Fallback untuk data lama yang masih memakai tags -->
                                     @foreach($place->tags as $tag)
                                         @php
                                             $tagClass = 'tag-green';
@@ -384,6 +450,21 @@
                                     @endforeach
                                 @endif
                             </div>
+
+                            <!-- Preview Fasilitas yang Dicentang di Form Admin -->
+                            @php
+                                $facilities = is_array($place->facilities) ? $place->facilities : [];
+                            @endphp
+                            @if(count($facilities) > 0)
+                                <div class="facilities-preview">
+                                    @foreach(array_slice($facilities, 0, 3) as $facility)
+                                        <span class="facility-chip">✓ {{ $facility }}</span>
+                                    @endforeach
+                                    @if(count($facilities) > 3)
+                                        <span class="facility-chip" style="font-weight: 600;">+{{ count($facilities) - 3 }} lainnya</span>
+                                    @endif
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </a>

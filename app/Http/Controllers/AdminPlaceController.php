@@ -23,7 +23,7 @@ class AdminPlaceController extends Controller
     // Menyimpan data tempat baru ke database
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'required|string|max:255',
             'distance' => 'required|string|max:255',
@@ -31,14 +31,28 @@ class AdminPlaceController extends Controller
             'description' => 'nullable|string',
             'address' => 'nullable|string',
             'image_url' => 'nullable|url',
+            'available_seats' => 'nullable|integer|min:0',
+            'noise_level' => 'nullable|string|max:50',
+            'wifi_speed' => 'nullable|string|max:50',
+            'opening_time' => 'nullable|string|max:20',
+            'closing_time' => 'nullable|string|max:20',
+            'facilities' => 'nullable|array',
+            'facilities.*' => 'string',
         ]);
 
-        // Default tags & facilities dasar
-        $data = $request->all();
-        $data['tags'] = ['Wi-Fi ⭐ 4.0', 'Tersedia'];
-        $data['facilities'] = ['Banyak colokan', 'AC', 'Parkir'];
+        // Ambil fasilitas yang dicentang dari form (default array kosong jika tidak ada yang dipilih)
+        $validated['facilities'] = $request->input('facilities', []);
 
-        TempatBelajar::create($data);
+        // Sinkronisasi otomatis untuk tags & status_text agar tampilan kartu dashboard tetap rapi
+        $wifi = $validated['wifi_speed'] ?? '4.5';
+        $seats = $validated['available_seats'] ?? 0;
+        $validated['tags'] = ["Wi-Fi ⭐ {$wifi}", "{$seats} Kursi"];
+
+        if (!empty($validated['opening_time']) && !empty($validated['closing_time'])) {
+            $validated['status_text'] = "Buka {$validated['opening_time']} - {$validated['closing_time']}";
+        }
+
+        TempatBelajar::create($validated);
 
         return redirect()->route('admin.places.index')->with('success', 'Tempat belajar berhasil ditambahkan!');
     }
@@ -55,7 +69,7 @@ class AdminPlaceController extends Controller
     {
         $place = TempatBelajar::findOrFail($id);
 
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'required|string|max:255',
             'distance' => 'required|string|max:255',
@@ -63,9 +77,28 @@ class AdminPlaceController extends Controller
             'description' => 'nullable|string',
             'address' => 'nullable|string',
             'image_url' => 'nullable|url',
+            'available_seats' => 'nullable|integer|min:0',
+            'noise_level' => 'nullable|string|max:50',
+            'wifi_speed' => 'nullable|string|max:50',
+            'opening_time' => 'nullable|string|max:20',
+            'closing_time' => 'nullable|string|max:20',
+            'facilities' => 'nullable|array',
+            'facilities.*' => 'string',
         ]);
 
-        $place->update($request->all());
+        // Pastikan jika semua checkbox fasilitas di-uncheck saat edit, database ikut ter-update menjadi []
+        $validated['facilities'] = $request->input('facilities', []);
+
+        // Perbarui tags & status_text agar sinkron dengan input terbaru
+        $wifi = $validated['wifi_speed'] ?? $place->wifi_speed ?? '4.5';
+        $seats = $validated['available_seats'] ?? $place->available_seats ?? 0;
+        $validated['tags'] = ["Wi-Fi ⭐ {$wifi}", "{$seats} Kursi"];
+
+        if (!empty($validated['opening_time']) && !empty($validated['closing_time'])) {
+            $validated['status_text'] = "Buka {$validated['opening_time']} - {$validated['closing_time']}";
+        }
+
+        $place->update($validated);
 
         return redirect()->route('admin.places.index')->with('success', 'Data tempat belajar berhasil diperbarui!');
     }
