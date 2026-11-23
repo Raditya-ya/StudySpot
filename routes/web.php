@@ -7,7 +7,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminPlaceController;
 use App\Http\Controllers\BookmarkController;
-use App\Http\Controllers\StudentNoteController;
+use App\Http\Controllers\RecommendationController;
+use App\Http\Controllers\AdminReportController;
 
 // Halaman utama diarahkan ke form login
 Route::get('/', function () {
@@ -32,7 +33,6 @@ Route::middleware('auth')->group(function () {
 
         $query = TempatBelajar::query();
 
-        // Filter berdasarkan Kategori jika bukan "Semua"
         if ($category && $category !== 'Semua') {
             if ($category === 'Buka sekarang') {
                 $query->whereJsonContains('tags', '24 Jam');
@@ -41,7 +41,6 @@ Route::middleware('auth')->group(function () {
             }
         }
 
-        // Filter berdasarkan kata kunci Pencarian
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
@@ -54,6 +53,9 @@ Route::middleware('auth')->group(function () {
         return view('dashboard', compact('places', 'category', 'search'));
     })->name('dashboard');
 
+    // Halaman Rekomendasi Berdasarkan Kriteria
+    Route::get('/rekomendasi', [RecommendationController::class, 'index'])->name('recommendations.index');
+
     // Rute Bookmark Tempat
     Route::post('/places/{id}/bookmark', [BookmarkController::class, 'toggle'])->name('places.bookmark');
     Route::get('/bookmarks', [BookmarkController::class, 'index'])->name('bookmarks.index');
@@ -64,9 +66,8 @@ Route::middleware('auth')->group(function () {
         return view('detail', compact('place'));
     })->name('places.show');
 
-    // Rute Catatan Mahasiswa (Tambah & Hapus)
-    Route::post('/places/{id}/notes', [StudentNoteController::class, 'store'])->name('places.notes.store');
-    Route::delete('/notes/{id}', [StudentNoteController::class, 'destroy'])->name('places.notes.destroy');
+    // Kirim Catatan & Rating Mahasiswa (Bisa diakses User/Mahasiswa & Admin)
+    Route::post('/places/{id}/reviews', [AdminReportController::class, 'storeReview'])->name('places.reviews.store');
 
     // Halaman Profil & Pengaturan
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -81,6 +82,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/places/{id}/edit', [AdminPlaceController::class, 'edit'])->name('places.edit');
         Route::put('/places/{id}', [AdminPlaceController::class, 'update'])->name('places.update');
         Route::delete('/places/{id}', [AdminPlaceController::class, 'destroy'])->name('places.destroy');
+
+        // Laporan Admin (Rata-rata Rating, Daftar Pemberi Rating & Hapus Rating)
+        Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
+        Route::delete('/reports/reviews/{id}', [AdminReportController::class, 'destroyReview'])->name('reports.reviews.destroy');
     });
 
 });

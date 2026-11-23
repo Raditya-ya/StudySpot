@@ -63,9 +63,7 @@
             </a>
             <nav class="menu-list">
                 <a href="{{ route('dashboard') }}" class="menu-item">Dashboard</a>
-                <a href="{{ route('admin.places.index') }}" class="menu-item">Data Tempat</a>
                 <a href="{{ route('bookmarks.index') }}" class="menu-item">Tempat Tersimpan</a>
-                <a href="#" class="menu-item">Laporan</a>
                 <a href="{{ route('profile.edit') }}" class="menu-item active">Pengaturan / Profil</a>
                 <form action="{{ route('logout') }}" method="POST" style="margin-top: 20px;">
                     @csrf

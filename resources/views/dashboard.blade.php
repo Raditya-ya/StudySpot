@@ -321,7 +321,7 @@
             </a>
             <div class="nav-links">
                 <a href="{{ route('dashboard') }}" class="active">Beranda</a>
-                <a href="#">Rekomendasi</a>
+                <a href="{{ route('recommendations.index') }}">Rekomendasi</a>
                 <a href="{{ route('bookmarks.index') }}">Tersimpan</a>
             </div>
         </div>

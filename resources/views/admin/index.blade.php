@@ -21,8 +21,8 @@
 
         /* Sidebar Styling */
         .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border); padding: 24px 0; display: flex; flex-direction: column; flex-shrink: 0; }
-        .sidebar-brand { display: flex; align-items: center; gap: 12px; padding: 0 24px; margin-bottom: 40px; font-weight: 700; font-size: 18px; color: var(--text-main); }
-        .brand-icon { background-color: var(--primary-light); color: var(--primary); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+        .sidebar-brand { display: flex; align-items: center; gap: 12px; padding: 0 24px; margin-bottom: 40px; }
+        .sidebar-brand img { height: 40px; border-radius: 8px; object-fit: cover; }
         
         .sidebar-menu { display: flex; flex-direction: column; gap: 8px; padding: 0 16px; }
         .menu-item { padding: 12px 16px; border-radius: 8px; text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 12px; transition: 0.2s; }
@@ -63,13 +63,12 @@
 
     <!-- Sidebar -->
     <aside class="sidebar">
-        <div class="sidebar-brand">
-            <div class="brand-icon">📚</div>
-            Admin
-        </div>
+        <a href="{{ route('dashboard') }}" class="sidebar-brand">
+            <img src="https://i.pinimg.com/736x/3e/b8/b0/3eb8b071563a9ad95f3357976ec32b46.jpg" alt="StudySpot Logo">
+        </a>
         <nav class="sidebar-menu">
             <a href="{{ route('admin.places.index') }}" class="menu-item active">Data Tempat</a>
-            <a href="#" class="menu-item">Laporan</a>
+            <a href="{{ route('admin.reports.index') }}" class="menu-item">Laporan</a>
             <a href="{{ route('dashboard') }}" class="menu-item" style="margin-top: 20px;">← Kembali ke Web</a>
         </nav>
     </aside>
@@ -93,10 +92,10 @@
 
         <div class="search-container">
             <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" class="search-input" placeholder="Cari tempat...">
+            <input type="text" id="adminSearchInput" class="search-input" placeholder="Cari tempat...">
         </div>
 
-        <table>
+        <table id="placesTable">
             <thead>
                 <tr>
                     <th>Nama</th>
@@ -110,12 +109,18 @@
             </thead>
             <tbody>
                 @forelse($places as $place)
-                    <tr>
+                    <tr class="place-row">
                         <td><strong>{{ $place->name }}</strong></td>
-                        <td>{{ $place->available_seats }} / {{ $place->total_seats }}</td>
-                        <td>{{ explode(' • ', $place->status_text)[0] ?? 'Buka' }}</td>
-                        <td>{{ explode(' - ', $place->noise_level)[0] ?? 'Sedang' }}</td>
-                        <td>{{ explode(' - ', $place->wifi_speed)[0] ?? '4,0' }}</td>
+                        <td>{{ $place->available_seats ?? 0 }}{{ $place->total_seats ? ' / ' . $place->total_seats : ' kursi' }}</td>
+                        <td>
+                            @if($place->opening_time && $place->closing_time)
+                                {{ $place->opening_time }} - {{ $place->closing_time }}
+                            @else
+                                {{ explode(' • ', $place->status_text ?? 'Buka')[0] }}
+                            @endif
+                        </td>
+                        <td>{{ explode(' - ', $place->noise_level ?? 'Sedang')[0] }}</td>
+                        <td>{{ explode(' - ', $place->wifi_speed ?? 'Cepat')[0] }}</td>
                         <td>{{ is_array($place->facilities) ? count($place->facilities) : 0 }}</td>
                         <td>
                             <div class="action-icons">
@@ -143,6 +148,21 @@
         </table>
 
     </main>
+
+    <script>
+        const searchInput = document.getElementById('adminSearchInput');
+        const tableRows = document.querySelectorAll('#placesTable tbody .place-row');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function () {
+                const keyword = this.value.toLowerCase().trim();
+                tableRows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(keyword) ? '' : 'none';
+                });
+            });
+        }
+    </script>
 
 </body>
 </html>

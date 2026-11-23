@@ -41,4 +41,9 @@ class TempatBelajar extends Model
     {
         return $this->hasMany(StudentNote::class, 'tempat_belajar_id')->latest();
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'tempat_belajar_id')->latest();
+    }
 }

@@ -107,9 +107,9 @@
         .hours-time { font-weight: 600; }
 
         /* Student Note Card */
-        .quote-box { background-color: var(--bg-body); padding: 16px; border-radius: 12px; font-size: 13px; color: var(--text-main); line-height: 1.5; font-style: italic; margin-bottom: 16px; border-left: 3px solid var(--primary); }
+        .quote-box { background-color: var(--bg-body); padding: 14px 16px; border-radius: 12px; font-size: 13px; color: var(--text-main); line-height: 1.5; font-style: italic; margin-bottom: 12px; border-left: 3px solid var(--primary); }
         .author-box { display: flex; align-items: center; gap: 12px; }
-        .author-avatar { width: 36px; height: 36px; border-radius: 50%; background-color: var(--primary); color: white; display: flex; justify-content: center; align-items: center; font-size: 12px; font-weight: 700; }
+        .author-avatar { width: 34px; height: 34px; border-radius: 50%; background-color: var(--primary); color: white; display: flex; justify-content: center; align-items: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
         .author-name { font-size: 13px; font-weight: 600; }
         .author-role { font-size: 11px; color: var(--text-muted); }
 
@@ -125,8 +125,17 @@
         .note-item:last-child { border-bottom: none; padding-bottom: 0; }
         .note-alert-success { background-color: var(--tag-green-bg); color: var(--tag-green-text); padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 500; margin-bottom: 12px; }
         .note-error { color: #dc2626; font-size: 11px; margin-top: 4px; display: block; }
-        .btn-delete-note { background: none; border: none; color: #ef4444; font-size: 11px; font-weight: 500; cursor: pointer; margin-left: auto; }
-        .btn-delete-note:hover { text-decoration: underline; }
+
+        /* Star Rating Picker & Review Stars */
+        .rating-picker-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; background-color: var(--bg-body); padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-light); }
+        .rating-picker-label { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+        .star-picker { display: flex; align-items: center; gap: 4px; }
+        .star-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: #d1d5db; transition: transform 0.1s, color 0.15s; line-height: 1; padding: 0; }
+        .star-btn.active { color: #f59e0b; }
+        .star-btn:hover { transform: scale(1.15); }
+        .rating-value-text { font-size: 12px; font-weight: 700; color: var(--text-main); margin-left: 6px; }
+        .note-stars { color: #f59e0b; font-size: 13px; letter-spacing: 1px; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+        .note-stars .empty { color: #d1d5db; }
 
         /* Right CTA Card */
         .plan-card-header { font-size: 11px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
@@ -198,7 +207,7 @@
             </a>
             <div class="nav-links">
                 <a href="{{ route('dashboard') }}" class="active">Beranda</a>
-                <a href="#">Rekomendasi</a>
+                <a href="{{ route('recommendations.index') }}">Rekomendasi</a>
                 <a href="{{ route('bookmarks.index') }}">Tersimpan</a>
             </div>
         </div>
@@ -280,13 +289,7 @@
                             <div class="summary-icon">🪑</div>
                             <div>
                                 <div class="summary-label">Ketersediaan saat ini</div>
-                                <div class="summary-value">
-                                    @if($place->total_seats)
-                                        {{ $place->available_seats ?? 0 }} dari {{ $place->total_seats }} kursi
-                                    @else
-                                        {{ $place->available_seats ?? 0 }} kursi tersedia
-                                    @endif
-                                </div>
+                                <div class="summary-value">{{ $place->available_seats ?? 0 }} kursi</div>
                             </div>
                         </div>
 
@@ -334,7 +337,7 @@
                 </div>
             </div>
 
-            <!-- Kolom 2 (Tengah): Jam Buka & Catatan Mahasiswa -->
+            <!-- Kolom 2 (Tengah): Jam Buka & Catatan/Ulasan Mahasiswa -->
             <div class="col-stacked">
                 <div class="card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -362,15 +365,19 @@
                     </p>
                 </div>
 
-                <!-- Kartu Catatan Mahasiswa (Dinamis) -->
+                <!-- Kartu Gabungan Catatan & Rating Mahasiswa -->
+                @php
+                    $reviews = $place->reviews()->with('user')->get();
+                @endphp
+
                 <div class="card" id="catatan-mahasiswa">
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <span style="color: var(--primary);">💡</span>
-                            <h2 class="section-title" style="margin-bottom:0;">Catatan mahasiswa</h2>
+                            <h2 class="section-title" style="margin-bottom:0;">Catatan & ulasan</h2>
                         </div>
                         <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">
-                            {{ $place->studentNotes()->count() }} catatan
+                            {{ $reviews->count() }} ulasan
                         </span>
                     </div>
 
@@ -378,14 +385,30 @@
                         <div class="note-alert-success">{{ session('note_success') }}</div>
                     @endif
 
-                    <!-- Form Tulis Catatan Baru -->
+                    <!-- Form Tulis Catatan & Beri Rating (Bisa diakses User/Mahasiswa & Admin) -->
                     @auth
-                        <form action="{{ route('places.notes.store', $place->id) }}" method="POST" class="note-form">
+                        <form action="{{ route('places.reviews.store', $place->id) }}" method="POST" class="note-form">
                             @csrf
-                            <textarea name="note" class="note-textarea" placeholder="Bagikan tips tempat duduk, colokan, atau suasana belajar di sini..." required>{{ old('note') }}</textarea>
-                            @error('note')
+
+                            <div class="rating-picker-row">
+                                <span class="rating-picker-label">Beri rating tempat</span>
+                                <input type="hidden" name="rating" id="detailRatingInput" value="{{ old('rating', 5) }}">
+                                <div class="star-picker" id="detailStarPicker">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <button type="button" class="star-btn {{ $i <= old('rating', 5) ? 'active' : '' }}" data-value="{{ $i }}">★</button>
+                                    @endfor
+                                    <span class="rating-value-text" id="detailRatingText">{{ old('rating', 5) }}/5</span>
+                                </div>
+                            </div>
+                            @error('rating')
+                                <span class="note-error" style="margin-bottom: 6px;">{{ $message }}</span>
+                            @enderror
+
+                            <textarea name="comment" class="note-textarea" placeholder="Bagikan pengalaman belajar, tips tempat duduk, colokan, atau suasana di sini..." required>{{ old('comment') }}</textarea>
+                            @error('comment')
                                 <span class="note-error">{{ $message }}</span>
                             @enderror
+
                             <div class="note-form-footer">
                                 <span style="font-size: 11px; color: var(--text-muted);">Posting sebagai <strong>{{ Auth::user()->name }}</strong></span>
                                 <button type="submit" class="btn-note-submit">Kirim Catatan</button>
@@ -393,16 +416,23 @@
                         </form>
                     @endauth
 
-                    <!-- Daftar Catatan Mahasiswa Dinamis -->
-                    @php
-                        $notes = $place->studentNotes()->with('user')->get();
-                    @endphp
-
+                    <!-- Daftar Catatan & Ulasan -->
                     <div class="notes-scroll">
-                        @forelse($notes as $item)
+                        @forelse($reviews as $item)
                             <div class="note-item">
-                                <div class="quote-box" style="margin-bottom: 10px;">
-                                    "{{ $item->note }}"
+                                <div class="note-stars" title="Rating {{ $item->rating }}/5">
+                                    @for($s = 1; $s <= 5; $s++)
+                                        @if($s <= $item->rating)
+                                            <span>★</span>
+                                        @else
+                                            <span class="empty">☆</span>
+                                        @endif
+                                    @endfor
+                                    <span style="font-size: 11px; color: var(--text-muted); font-weight: 600; margin-left: 4px;">({{ $item->rating }}/5)</span>
+                                </div>
+
+                                <div class="quote-box">
+                                    "{{ $item->comment }}"
                                 </div>
 
                                 <div class="author-box">
@@ -415,20 +445,12 @@
                                             {{ ($item->user->role ?? 'user') === 'admin' ? 'Admin' : 'Mahasiswa' }} • {{ $item->created_at->diffForHumans() }}
                                         </div>
                                     </div>
-
-                                    @if(auth()->check() && (auth()->id() === $item->user_id || auth()->user()->role === 'admin'))
-                                        <form action="{{ route('places.notes.destroy', $item->id) }}" method="POST" style="margin-left: auto;" onsubmit="return confirm('Hapus catatan ini?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn-delete-note">Hapus</button>
-                                        </form>
-                                    @endif
                                 </div>
                             </div>
                         @empty
                             <div style="text-align: center; padding: 20px 12px; background-color: var(--bg-body); border-radius: 12px; border: 1px dashed var(--border-light);">
                                 <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5;">
-                                    Belum ada catatan mahasiswa untuk tempat ini.<br>Jadilah yang pertama membagikan pengalaman belajarmu!
+                                    Belum ada catatan atau rating untuk tempat ini.<br>Jadilah yang pertama membagikan pengalaman belajarmu!
                                 </p>
                             </div>
                         @endforelse
@@ -446,7 +468,7 @@
                     <div class="route-icon">🛵</div>
                     <div style="font-size: 12px;">
                         <strong style="display:block; font-size: 13px; margin-bottom:2px;">Kampus Utama → {{ $place->location }}</strong>
-                        <span style="color: var(--text-muted);">{{ $place->distance }} dari kampus</span>
+                        <span style="color: var(--text-muted);">{{ $place->distance }}</span>
                     </div>
                 </div>
 
@@ -507,6 +529,25 @@
     <footer>
         © 2026 StudySpot. Tempat Belajar Terbaik untuk Anda.
     </footer>
+
+    <script>
+        const detailStars = document.querySelectorAll('#detailStarPicker .star-btn');
+        const detailRatingInput = document.getElementById('detailRatingInput');
+        const detailRatingText = document.getElementById('detailRatingText');
+
+        detailStars.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const val = parseInt(btn.getAttribute('data-value'), 10);
+                detailRatingInput.value = val;
+                if (detailRatingText) {
+                    detailRatingText.textContent = val + '/5';
+                }
+                detailStars.forEach(s => {
+                    s.classList.toggle('active', parseInt(s.getAttribute('data-value'), 10) <= val);
+                });
+            });
+        });
+    </script>
 
 </body>
 </html>
